@@ -14,16 +14,18 @@ public class Easy13 {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		String s;
-		while((sc.hasNext() && (s = sc.next()) != "0") 
+		while(sc.hasNext() && (s = sc.next()) != "0") 
 			System.out.println(new Easy13().new Solution().romanToInt(s));
 	}
 	class Solution {
 	    public int romanToInt(String s) {
 	    	int ans = 0;
 	    	for(RomaNumber num : RomaNumber.values()) {
-	    			if(s.contains(num.name()))
+	    			if(s.contains(num.name())) {
+	    				System.out.println(num.name());
 	    				s = s.replace(num.name(), "");
-	    			ans += num.getN();
+	    				ans += num.getN();
+	    			}
 	    	}
 			return ans;
 	    }

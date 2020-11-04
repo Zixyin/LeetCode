@@ -21,31 +21,43 @@ public class Middle394Stack {
 	    public String decodeString(String s) {
 			Deque<Character> alphaQueue = new LinkedList<Character>();
 			Deque<Integer> digitQueue = new LinkedList<Integer>();
-			StringBuffer ans = new StringBuffer(), tmp;
+			StringBuffer ans = new StringBuffer(), num = new StringBuffer(), word = new StringBuffer();
 			for(char c : s.toCharArray()) {
 				if(Character.isDigit(c)) {
-					tmp = new StringBuffer();
-					while(!alphaQueue.isEmpty())
-						tmp.insert(0, tmp);
-					ans.append(tmp);
-					digitQueue.offerLast(Integer.parseInt(s));
+					//记录数字
+					num.append(c);
 				} else if(c == '['){
-					
+					//1.num转int入数字栈
+					digitQueue.offerLast(Integer.parseInt(num.reverse().toString()));
+					num = new StringBuffer();
+					//2.栈里所有字母出栈		
+					while(!alphaQueue.isEmpty())
+						word.append(alphaQueue.pollLast());
+					//3.'['入栈
+					alphaQueue.offerLast(c);
+					ans.append(word.reverse());
+					word = new StringBuffer();
 				}
 				else if(c == ']') {
-					tmp = new StringBuffer();
 					char out;
+					//1.栈里所有字母出栈转String
 					while((out = alphaQueue.pollLast()) != '[') 
-						tmp.insert(0, out);
+						word.append(out);
+					word = word.reverse();
+					//2.从数字栈里取重复次数
 					int cnt = digitQueue.pollLast();
-					System.out.println(cnt);
 					while(--cnt > 0) 
-						tmp.append(tmp);
-					ans.append(tmp);
+						word.append(word);
+					ans.append(word);
+					word = new StringBuffer();
 				} else {
+					//字母入字母栈
 					alphaQueue.offerLast(c);
 				}
 			}
+			while(!alphaQueue.isEmpty())
+				word.append(alphaQueue.pollLast());
+			ans.append(word.reverse());
 	    	return ans.toString();
 	    }
 	}

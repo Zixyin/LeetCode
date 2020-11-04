@@ -18,17 +18,12 @@ public class Middle394Regex {
 			String ans = s;
 			while(ans.contains("[")) {
 				Matcher m = p.matcher(ans);
-				if(m.find()) {
-					String[] strArr = m.group().split("\\[");
-					int cnt = Integer.parseInt(strArr[0]);
-					String word = strArr[1].replace("]", "");
-					StringBuilder sb = new StringBuilder();
-					String words;
-					while(cnt -- > 0)
-						sb.append(word);
-					words = sb.toString();
-					ans = ans.replaceFirst("(\\d)+\\[([a-zA-Z])+\\]", words);
-				}
+				StringBuilder words = new StringBuilder();
+				int cnt = Integer.parseInt(m.group(1));
+				String word = m.group(2);
+				while(cnt -- > 0)
+					words.append(word);
+				ans = ans.replaceFirst(regex, words.toString());
 			}
 	    	return ans;
 	    }

@@ -30,7 +30,6 @@ public class Middle394Stack {
 	    		} else if(Character.isLetter(c) || c == '[') {
 	    			stack.offerLast(String.valueOf(s.charAt(ptr ++)));
 	    		} else {
-	    			StringBuffer sb = new StringBuffer();
 	    			LinkedList<String> tmp = new LinkedList<>();
 	    			String letter, word;
 	    			while(!(letter = stack.pollLast()).equals("[")) 
@@ -38,9 +37,7 @@ public class Middle394Stack {
 	    				tmp.addLast(letter);
 	    			int cnt = Integer.parseInt(stack.pollLast());
 	    			word = getString(tmp);
-	    			while(cnt -- > 0)
-	    				sb = sb.append(word);
-	    			stack.offerLast(sb.toString());
+	    			stack.offerLast(word.repeat(cnt));
 	    			++ ptr;
 	    		}
 	    	}

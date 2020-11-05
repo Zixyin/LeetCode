@@ -1,5 +1,6 @@
 package com.yzx.middle;
 
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -18,47 +19,45 @@ public class Middle394Stack {
 			System.out.println(new Middle394Stack().new Solution().decodeString(s));
 	}
 	class Solution {
+		int ptr;
 	    public String decodeString(String s) {
-			Deque<Character> alphaQueue = new LinkedList<Character>();
-			Deque<Integer> digitQueue = new LinkedList<Integer>();
-			StringBuffer ans = new StringBuffer(), num = new StringBuffer(), word = new StringBuffer();
-			for(char c : s.toCharArray()) {
-				if(Character.isDigit(c)) {
-					//记录数字
-					num.append(c);
-				} else if(c == '['){
-					//1.num转int入数字栈
-					digitQueue.offerLast(Integer.parseInt(num.reverse().toString()));
-					num = new StringBuffer();
-					//2.栈里所有字母出栈		
-					while(!alphaQueue.isEmpty())
-						word.append(alphaQueue.pollLast());
-					//3.'['入栈
-					alphaQueue.offerLast(c);
-					ans.append(word.reverse());
-					word = new StringBuffer();
-				}
-				else if(c == ']') {
-					char out;
-					//1.栈里所有字母出栈转String
-					while((out = alphaQueue.pollLast()) != '[') 
-						word.append(out);
-					word = word.reverse();
-					//2.从数字栈里取重复次数
-					int cnt = digitQueue.pollLast();
-					while(--cnt > 0) 
-						word.append(word);
-					ans.append(word);
-					word = new StringBuffer();
-				} else {
-					//字母入字母栈
-					alphaQueue.offerLast(c);
-				}
-			}
-			while(!alphaQueue.isEmpty())
-				word.append(alphaQueue.pollLast());
-			ans.append(word.reverse());
-	    	return ans.toString();
+	    	LinkedList<String> stack = new LinkedList<String>();
+	    	char c;
+	    	while(ptr < s.length()) {
+	    		c = s.charAt(ptr);
+	    		if(Character.isDigit(c)) {
+	    			stack.offerLast(getDigit(s));
+	    		} else if(Character.isLetter(c) || c == '[') {
+	    			stack.offerLast(String.valueOf(s.charAt(ptr ++)));
+	    		} else {
+	    			StringBuffer sb = new StringBuffer();
+	    			LinkedList<String> tmp = new LinkedList<>();
+	    			String letter, word;
+	    			while(!(letter = stack.pollLast()).equals("[")) 
+	    				//只能用栈处理，不然[]嵌套里面的字符串顺序会反
+	    				tmp.addLast(letter);
+	    			int cnt = Integer.parseInt(stack.pollLast());
+	    			word = getString(tmp);
+	    			while(cnt -- > 0)
+	    				sb = sb.append(word);
+	    			stack.offerLast(sb.toString());
+	    			++ ptr;
+	    		}
+	    	}
+	    	Collections.reverse(stack);
+	    	return getString(stack);
+	    }
+	    public String getDigit(String s) {
+	    	StringBuffer num = new StringBuffer();
+	    	while(Character.isDigit(s.charAt(ptr)))
+	    		num.append(s.charAt(ptr ++));
+	    	return num.toString();
+	    }
+	    public String getString(LinkedList<String> list){
+	    	StringBuilder sb = new StringBuilder();
+	    	while(!list.isEmpty())
+	    		sb.append(list.pollLast());
+	    	return sb.toString();
 	    }
 	}
 }

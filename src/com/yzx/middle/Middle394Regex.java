@@ -13,16 +13,18 @@ public class Middle394Regex {
 	}
 	class Solution {
 	    public String decodeString(String s) {
-			String regex = "(\\d)+\\[([a-zA-Z])+\\]";
+			String regex = "(\\d+)\\[([a-zA-Z]+)\\]";
 			Pattern p= Pattern.compile(regex);
 			String ans = s;
 			while(ans.contains("[")) {
 				Matcher m = p.matcher(ans);
 				StringBuilder words = new StringBuilder();
-				int cnt = Integer.parseInt(m.group(1));
-				String word = m.group(2);
-				while(cnt -- > 0)
-					words.append(word);
+				if(m.find()) {
+					int cnt = Integer.parseInt(m.group(1));
+					String word = m.group(2);
+					while(cnt -- > 0)
+						words.append(word);
+				}
 				ans = ans.replaceFirst(regex, words.toString());
 			}
 	    	return ans;
